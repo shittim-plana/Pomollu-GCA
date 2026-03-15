@@ -219,14 +219,16 @@ class ExprParser {
 
         if (this.peek().type === ExprTokenType.Arrow) {
             this.advance(); // ->
-            if (expr.kind !== ExprKind.Variable && expr.kind !== ExprKind.ContextRef) {
-                // Try to interpret as identifier
-                const paramName = expr.kind === ExprKind.Literal ? String(expr.value) : 'x';
-                const body = this.parseLambda();
-                return { kind: ExprKind.Lambda, param: paramName, body } as LambdaExpr;
+            let paramName: string;
+            if (expr.kind === ExprKind.Variable) {
+                paramName = expr.name;
+            } else if (expr.kind === ExprKind.ContextRef) {
+                paramName = expr.name;
+            } else if (expr.kind === ExprKind.Literal && typeof expr.value === 'string') {
+                paramName = expr.value;
+            } else {
+                throw new Error(`Invalid lambda parameter: expected identifier, got ${expr.kind}`);
             }
-            const paramName = expr.kind === ExprKind.Variable ? expr.name :
-                              expr.kind === ExprKind.ContextRef ? expr.name : 'x';
             const body = this.parseLambda();
             return { kind: ExprKind.Lambda, param: paramName, body } as LambdaExpr;
         }

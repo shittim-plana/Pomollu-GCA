@@ -2,7 +2,7 @@
     import { createEventDispatcher, onMount } from "svelte";
     import { slide, fade } from "svelte/transition";
     import { quintOut } from "svelte/easing";
-    import type { ModelParameters, TemplateConfig } from "../../shared/types";
+    import type { ModelParameters } from "../../shared/types";
     import { MODELS } from "../../model/list";
     import { analyze } from "../../acvus";
 
@@ -25,11 +25,11 @@
         onConfigChange();
     }
 
-    function updateTemplate(field: keyof TemplateConfig, value: string) {
+    function updateTemplate(field: 'system_template' | 'user_template' | 'output_template', value: string) {
         if (!currentParams.templates) {
             currentParams.templates = { enabled: true };
         }
-        (currentParams.templates as any)[field] = value || undefined;
+        currentParams.templates[field] = value || undefined;
         currentParams = currentParams;
         onConfigChange();
     }
@@ -755,7 +755,7 @@
         {#if templates.enabled}
             <div class="space-y-4" transition:slide={{ duration: 200, easing: quintOut }}>
                 <p class="text-xs text-zinc-500">
-                    Use acvus template syntax to transform messages. Available context: <code class="text-zinc-400">@input</code>, <code class="text-zinc-400">@content</code>, <code class="text-zinc-400">@role</code>, <code class="text-zinc-400">@messages</code>, <code class="text-zinc-400">@message_count</code>
+                    Use acvus template syntax to transform messages. Available context: <code class="text-zinc-400">@input</code> (message text), <code class="text-zinc-400">@role</code>, <code class="text-zinc-400">@message_count</code>. Pipes: <code class="text-zinc-400">trim</code>, <code class="text-zinc-400">upper</code>, <code class="text-zinc-400">lower</code>, <code class="text-zinc-400">replace_str</code>, etc.
                 </p>
 
                 <!-- System Template -->
