@@ -10,15 +10,20 @@ import * as path from 'path';
 /**
  * Vite plugin to rename the output file to .ts after build
  */
-function copyToTsPlugin(): Plugin {
+function renameToTsPlugin(): Plugin {
   return {
-    name: 'vite-plugin-copy-to-ts',
+    name: 'vite-plugin-rename-to-ts',
     apply: 'build',
     closeBundle() {
       const srcPath = path.resolve(__dirname, 'dist/pomollu-gca.prerelease.js');
       const destPath = path.resolve(__dirname, 'dist/pomollu-gca.ts');
-      if (fs.existsSync(srcPath)) {
-        fs.renameSync(srcPath, destPath);
+      try {
+        if (fs.existsSync(srcPath)) {
+          fs.renameSync(srcPath, destPath);
+        }
+      } catch (err) {
+        console.error(`[vite-plugin-rename-to-ts] Failed to rename ${srcPath} to ${destPath}:`, err);
+        throw err;
       }
     }
   };
@@ -32,7 +37,7 @@ export default defineConfig({
     }),
     cssInjectedByJsPlugin(), // CSS injection
     risuPluginHeader(), // RisuAI Plugin header injection
-    copyToTsPlugin(), // Rename .prerelease.js → .ts
+    renameToTsPlugin(), // Rename .prerelease.js → .ts
   ],
   build: {
     lib: {

@@ -44,8 +44,6 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          files: |
-            dist/pomollu-gca.js
-            ${{ steps.prerelease.outputs.is_prerelease == 'true' && 'dist/pomollu-gca.ts' || '' }}
+          files: dist/pomollu-gca.*
           prerelease: ${{ steps.prerelease.outputs.is_prerelease }}
           generate_release_notes: true
