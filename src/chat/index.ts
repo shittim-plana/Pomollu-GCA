@@ -5,7 +5,6 @@ import { ModelManager } from "../model";
 import { RequestType } from "../shared/types";
 import { parseRequestType } from "../shared/util";
 import { applyPluginParams, getGenerationConfig, getPluginParams, getSafetySettings } from "./config";
-import { parse } from "svelte/compiler";
 import { parseGeminiChat } from "./format";
 import { requestGenerateContent, requestGenerateStreamContent } from "./request";
 import { handleResponse, handleStreamResponse } from "./response";
@@ -21,7 +20,7 @@ export async function handleRequest(args: PluginV2ProviderArgument, abortSignal?
 
     const stream = newParams.use_stream === true && requestType === RequestType.Chat;
         
-    const contents = parseGeminiChat(args.prompt_chat);
+    const contents = parseGeminiChat(args.prompt_chat, newParams.templates);
     const generationConfig = getGenerationConfig(newParams);
     const safetySettings = getSafetySettings();
     const activeTools = newParams.active_tools || [];
@@ -55,6 +54,6 @@ export async function handleRequest(args: PluginV2ProviderArgument, abortSignal?
         return await handleStreamResponse(res);
     } else {
         const res = await requestGenerateContent(body, abortSignal);
-        return handleResponse(res);
+        return handleResponse(res, newParams.templates);
     }
 }

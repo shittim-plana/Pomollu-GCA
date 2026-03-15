@@ -1,10 +1,11 @@
 import type { GlobalFetchResult } from "../api";
 import { Logger } from "../shared/logger";
+import type { TemplateConfig } from "../shared/types";
 import { extractContent, formatResult } from "./format";
 import type { GeminiResponse } from "./types";
 
 
-export function handleResponse(result: GlobalFetchResult): { success: boolean, content: string | ReadableStream } {
+export function handleResponse(result: GlobalFetchResult, templates?: TemplateConfig): { success: boolean, content: string | ReadableStream } {
     if (!result.ok) {
         return { success: false, content: `Error: ${result.status} ${JSON.stringify(result.data)}` };
     }
@@ -16,7 +17,8 @@ export function handleResponse(result: GlobalFetchResult): { success: boolean, c
         return { success: false, content: "Empty response from model" };
     }
 
-    return { success: true, content: formatResult(content, thoughts) };
+    const outputTemplate = templates?.enabled ? templates.output_template : undefined;
+    return { success: true, content: formatResult(content, thoughts, outputTemplate) };
 }
 
 export async function handleStreamResponse(response: Response): Promise<{ success: boolean, content: string | ReadableStream }> {

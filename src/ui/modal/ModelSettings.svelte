@@ -4,10 +4,35 @@
     import { quintOut } from "svelte/easing";
     import type { ModelParameters } from "../../shared/types";
     import { MODELS } from "../../model/list";
+    import { analyze } from "../../acvus";
 
     export let currentModelId: string = "";
     export let currentParams: ModelParameters = {};
     export let thinkingMode: "level" | "tokens" = "level";
+
+    // Acvus template state
+    $: templates = currentParams.templates ?? { enabled: false };
+    $: systemRefs = templates.system_template ? analyze(templates.system_template).contextRefs : [];
+    $: userRefs = templates.user_template ? analyze(templates.user_template).contextRefs : [];
+
+    function toggleTemplates() {
+        if (!currentParams.templates) {
+            currentParams.templates = { enabled: true };
+        } else {
+            currentParams.templates.enabled = !currentParams.templates.enabled;
+        }
+        currentParams = currentParams;
+        onConfigChange();
+    }
+
+    function updateTemplate(field: 'system_template' | 'user_template' | 'output_template', value: string) {
+        if (!currentParams.templates) {
+            currentParams.templates = { enabled: true };
+        }
+        currentParams.templates[field] = value || undefined;
+        currentParams = currentParams;
+        onConfigChange();
+    }
 
     const dispatch = createEventDispatcher();
     let isDropdownOpen = false;
@@ -700,5 +725,88 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Acvus Templates -->
+    <div class="space-y-4 pt-2">
+        <div class="flex items-center justify-between">
+            <h3 class="text-sm font-semibold text-zinc-300 uppercase tracking-wider flex items-center gap-2">
+                <svg class="h-4 w-4 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                </svg>
+                Acvus Templates
+            </h3>
+            <button
+                type="button"
+                class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/50 {templates.enabled
+                    ? 'bg-blue-600'
+                    : 'bg-zinc-700'}"
+                on:click={toggleTemplates}
+            >
+                <span class="sr-only">Enable Templates</span>
+                <span
+                    class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform shadow-sm {templates.enabled
+                        ? 'translate-x-6'
+                        : 'translate-x-1'}"
+                />
+            </button>
+        </div>
+
+        {#if templates.enabled}
+            <div class="space-y-4" transition:slide={{ duration: 200, easing: quintOut }}>
+                <p class="text-xs text-zinc-500">
+                    Use acvus template syntax to transform messages. Available context: <code class="text-zinc-400">@input</code> (message text), <code class="text-zinc-400">@role</code>, <code class="text-zinc-400">@message_count</code>. Pipes: <code class="text-zinc-400">trim</code>, <code class="text-zinc-400">upper</code>, <code class="text-zinc-400">lower</code>, <code class="text-zinc-400">replace_str</code>, etc.
+                </p>
+
+                <!-- System Template -->
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between">
+                        <label for="system-template" class="text-sm font-medium text-zinc-300">System Template</label>
+                        {#if systemRefs.length > 0}
+                            <span class="text-xs text-zinc-500">refs: {systemRefs.map(r => '@' + r).join(', ')}</span>
+                        {/if}
+                    </div>
+                    <textarea
+                        id="system-template"
+                        value={templates.system_template ?? ''}
+                        on:input={(e) => updateTemplate('system_template', e.currentTarget.value)}
+                        placeholder={'e.g. {{ @input | trim }}'}
+                        rows="3"
+                        class="w-full px-3 py-2 bg-[#252528] border border-zinc-700 rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all shadow-sm font-mono text-xs resize-y"
+                    />
+                </div>
+
+                <!-- User Template -->
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between">
+                        <label for="user-template" class="text-sm font-medium text-zinc-300">User Template</label>
+                        {#if userRefs.length > 0}
+                            <span class="text-xs text-zinc-500">refs: {userRefs.map(r => '@' + r).join(', ')}</span>
+                        {/if}
+                    </div>
+                    <textarea
+                        id="user-template"
+                        value={templates.user_template ?? ''}
+                        on:input={(e) => updateTemplate('user_template', e.currentTarget.value)}
+                        placeholder={'e.g. {{ @input }}'}
+                        rows="3"
+                        class="w-full px-3 py-2 bg-[#252528] border border-zinc-700 rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all shadow-sm font-mono text-xs resize-y"
+                    />
+                </div>
+
+                <!-- Output Template -->
+                <div class="space-y-2">
+                    <label for="output-template" class="text-sm font-medium text-zinc-300">Output Template</label>
+                    <textarea
+                        id="output-template"
+                        value={templates.output_template ?? ''}
+                        on:input={(e) => updateTemplate('output_template', e.currentTarget.value)}
+                        placeholder={'e.g. {{ @input | trim }}'}
+                        rows="3"
+                        class="w-full px-3 py-2 bg-[#252528] border border-zinc-700 rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all shadow-sm font-mono text-xs resize-y"
+                    />
+                </div>
+            </div>
+        {/if}
     </div>
 </div>
