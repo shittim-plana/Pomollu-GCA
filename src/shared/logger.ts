@@ -7,18 +7,18 @@
  */
 export class Logger {
     static log(...message: any[]) {
-        console.log("[GCA]", ...message);
+        console.log("[Pomollu]", ...message);
     }
     static error(...message: any[]) {
-        console.error("[GCA]", ...message);
+        console.error("[Pomollu]", ...message);
     }   
     static warn(...message: any[]) {
-        console.warn("[GCA]", ...message);
+        console.warn("[Pomollu]", ...message);
     }
     static info(...message: any[]) {
-        console.info("[GCA]", ...message);
+        console.info("[Pomollu]", ...message);
     }
     static debug(...message: any[]) {
-        console.debug("[GCA]", ...message);
+        console.debug("[Pomollu]", ...message);
     }
 }

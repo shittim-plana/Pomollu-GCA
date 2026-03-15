@@ -59,7 +59,7 @@
         </div>
         <div>
             <h2 class="text-lg font-bold text-zinc-100 tracking-tight">
-                Risu-GCA
+                Pomollu
             </h2>
             <p class="text-xs text-zinc-500 font-medium">
                 Gemini Code Assist Integration
