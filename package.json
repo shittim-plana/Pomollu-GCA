@@ -2,6 +2,7 @@
   "name": "pomollu-gca",
   "version": "0.3.0-pre.1",
   "description": "Pomollu GCA - Gemini Code Assist Integration Plugin",
+  "license": "SEE LICENSE IN LICENSE",
   "type": "module",
   "main": "dist/pomollu-gca.js",
   "scripts": {
