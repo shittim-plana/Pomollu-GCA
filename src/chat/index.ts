@@ -54,6 +54,6 @@ export async function handleRequest(args: PluginV2ProviderArgument, abortSignal?
         return await handleStreamResponse(res);
     } else {
         const res = await requestGenerateContent(body, abortSignal);
-        return handleResponse(res);
+        return handleResponse(res, newParams.templates);
     }
 }

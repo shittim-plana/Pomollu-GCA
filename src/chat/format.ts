@@ -116,11 +116,24 @@ export function extractContent(response: GeminiResponse): { content: string, tho
     return { content, thoughts };
 }
 
-export function formatResult(content: string, thoughts: string): string {
+export function formatResult(content: string, thoughts: string, outputTemplate?: string): string {
     let result = '';
     if (thoughts.trim()) {
         result += `<Thoughts>\n\n${thoughts.trim()}\n\n</Thoughts>\n\n`;
     }
     result += content;
+
+    // Apply acvus output template if configured
+    if (outputTemplate && outputTemplate.trim()) {
+        const templateResult = evaluate(outputTemplate, {
+            input: result,
+            content,
+            thoughts,
+        });
+        if (!templateResult.error) {
+            return templateResult.output;
+        }
+    }
+
     return result;
 }
