@@ -16,8 +16,8 @@ export default defineConfig({
   build: {
     lib: {
       entry: 'src/main.ts', // Plugin entry file
-      name: 'risu-gca', // Plugin name
-      fileName: () => 'risu-gca.js', // Output file name
+      name: 'pomollu-gca', // Plugin name
+      fileName: () => 'pomollu-gca.js', // Output file name
       formats: ['umd']
     },
     rollupOptions: {

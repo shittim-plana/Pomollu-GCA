@@ -3,7 +3,7 @@ export default {
   content: [
     './src/**/*.{js,ts,svelte}',
   ],
-  important: "#risu-gca-container",
+  important: "#pomollu-gca-container",
   corePlugins: {
     preflight: false,
   },

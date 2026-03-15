@@ -119,7 +119,7 @@ npm install
 npm run build
 ```
 
-`dist/risu-gca.js` 파일이 생성됩니다. RisuAI에 플러그인으로 임포트하여 사용합니다.
+`dist/pomollu-gca.js` 파일이 생성됩니다. RisuAI에 플러그인으로 임포트하여 사용합니다.
 
 ## 프로젝트 구조
 
