@@ -24,12 +24,28 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Check if pre-release
+        id: prerelease
+        run: |
+          if echo "${{ github.ref_name }}" | grep -qE '(pre|alpha|beta|rc)'; then
+            echo "is_prerelease=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "is_prerelease=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Build plugin
-        run: npm run build
+        run: |
+          if [ "${{ steps.prerelease.outputs.is_prerelease }}" = "true" ]; then
+            npm run build:prerelease
+          else
+            npm run build
+          fi
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/pomollu-gca.js
-          prerelease: ${{ contains(github.ref_name, 'pre') || contains(github.ref_name, 'alpha') || contains(github.ref_name, 'beta') || contains(github.ref_name, 'rc') }}
+          files: |
+            dist/pomollu-gca.js
+            ${{ steps.prerelease.outputs.is_prerelease == 'true' && 'dist/pomollu-gca.ts' || '' }}
+          prerelease: ${{ steps.prerelease.outputs.is_prerelease }}
           generate_release_notes: true

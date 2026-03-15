@@ -6,7 +6,8 @@
   "type": "module",
   "main": "dist/pomollu-gca.js",
   "scripts": {
-    "build": "vite build"
+    "build": "vite build",
+    "build:prerelease": "vite build && vite build --config vite.config.prerelease.ts"
   },
   "dependencies": {
     "lucide-svelte": "^0.548.0",
