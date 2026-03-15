@@ -139,4 +139,4 @@ src/
 
 ## 라이선스
 
-이 프로젝트는 **MIT License**로 제공됩니다.
+이 프로젝트는 **[Acvus License](LICENSE)**로 제공됩니다.
