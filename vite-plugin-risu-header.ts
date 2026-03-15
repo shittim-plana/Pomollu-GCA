@@ -11,8 +11,8 @@ export function risuPluginHeader(): Plugin {
     apply: 'build',
     
     generateBundle(options, bundle) {
-      // 번들된 JS 파일 찾기
-      const jsFile = Object.keys(bundle).find(fileName => fileName.endsWith('.js'));
+      // 번들된 JS/TS 파일 찾기
+      const jsFile = Object.keys(bundle).find(fileName => fileName.endsWith('.js') || fileName.endsWith('.ts'));
       
       if (!jsFile) return;
       
