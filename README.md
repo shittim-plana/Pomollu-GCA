@@ -1,51 +1,63 @@
-# Risu GCA (Gemini Code Assist)
+# Risu GCA
 
-This plugin integrates **Gemini Code Assist** as a chat completion provider within RisuAI. It allows you to use Gemini models directly in your chats.
+A [RisuAI](https://risuai.net) plugin that integrates **Google's Gemini Code Assist API** as a chat completion provider. Authenticate with your Google account and use Gemini models directly in your RisuAI chats.
 
 ## Features
 
-### Gemini Code Assist Provider
+- **Gemini Chat Provider** — Registers as a provider in RisuAI, supporting both streaming and non-streaming responses.
+- **Google OAuth2 Authentication** — Secure login flow with automatic token refresh and session management.
+- **Model Selection** — Choose from available Gemini models (Gemini 3 Pro/Flash, Gemini 2.5 Pro/Flash/Flash-Lite) and configure parameters per request type (Chat, Memory, Emotion, Translate, Other).
+- **Tool Support** — Enable Google Search, Google Maps, URL context, and code execution tools per request.
+- **Acvus Template Engine** — Built-in template engine for pre/post-processing messages with filters, pattern matching, iteration, and 50+ built-in functions.
+- **Settings UI** — In-app modal for authentication, model configuration, parameter tuning, and backup/restore of settings.
+- **Auto-Onboarding** — Automatically provisions a Gemini Code Assist project and manages privacy settings on first use.
 
--   **Seamless Integration**: Adds "Gemini Code Assist" to the list of available providers in RisuAI.
+## Tech Stack
 
-### Authentication & Security
+- [Svelte 4](https://svelte.dev) + [TypeScript](https://www.typescriptlang.org)
+- [Tailwind CSS 3](https://tailwindcss.com) (scoped to plugin container)
+- [Vite 5](https://vitejs.dev) (builds to a single UMD bundle)
 
--   **Secure Login**: Handles authentication securely using access tokens.
--   **Token Management**: Automatically manages access token expiration and refreshing.
+## Getting Started
 
-### Model Management
+### Prerequisites
 
--   **Model Selection**: Choose from available Gemini models.
--   **Configuration**: Customize model parameters to suit your needs.
+- [Node.js](https://nodejs.org) (v18+)
+- [npm](https://www.npmjs.com)
 
-### User Interface
-
--   **Easy Setup**: Simple UI for logging in and configuring the provider.
--   **Status Indicators**: Visual indicators for login status and service tier.
-
----
-
-## Installation & Build
-
-### 1. Install Dependencies
+### Install Dependencies
 
 ```sh
 npm install
 ```
 
-### 2. Build Plugin
+### Build
 
 ```sh
 npm run build
 ```
 
-This will generate a `dist/risu-gca.js` file.
+This generates a single `dist/risu-gca.js` file containing all code and styles.
 
-### 3. Import to RisuAI
+### Install in RisuAI
 
-Import the generated `dist/risu-gca.js` file into RisuAI as a plugin.
+Import the built `dist/risu-gca.js` file into RisuAI as a plugin.
 
----
+## Project Structure
+
+```
+src/
+├── main.ts            # Plugin entry point
+├── plugin.ts          # Plugin metadata and argument definitions
+├── api.ts             # RisuAI API interface
+├── acvus/             # Acvus template engine (lexer, parser, evaluator)
+├── auth/              # Google OAuth2 authentication
+├── chat/              # Chat request handling, formatting, streaming
+├── gca/               # Gemini Code Assist project management
+├── model/             # Model selection and parameter storage
+├── shared/            # Shared types, utilities, logging, events, backup
+└── ui/                # Svelte UI components (modal, settings, popup)
+```
 
 ## License
 
